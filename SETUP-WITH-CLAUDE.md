@@ -33,7 +33,8 @@ Ask the user, in one message:
 1. Tell the user how to enable network debugging on the TV:
    Settings → Device Preferences → About → click **Build** 7 times → back → Developer options → turn on **USB debugging** and **Network debugging** (on Google TV: Settings → System → About → Android TV OS build).
 2. On the PC, in the `windows` folder: run `get-adb.bat` (downloads Google's ADB), then `find-projector.bat`.
-3. Copy `config.example.bat` to `config.bat` and set `IP=<address>:5555`.
+3. Run `setup-config.bat` (or write `config.bat` yourself with only `@echo off` and `set "KEY=value"` lines — **no comment lines**, CRLF endings).
+   - Android 11+ / Google TV devices (Mi Box S 2nd gen, Chromecast with Google TV): there is no Network debugging, only *Wireless debugging*. Run `pair-device.bat` (pair code + address from the TV), which saves the address. The port changes after reboots.
 4. First connection: the TV shows **"Allow network debugging?"** — the user ticks *Always allow* and presses **Allow**.
 
 ## 2. Collect keys (only for the parts chosen)

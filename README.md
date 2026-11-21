@@ -64,7 +64,8 @@ Your keys only go into `windows/config.bat` on your PC and into your own addon l
 ## Set it up yourself
 
 1. TV: enable Developer options → **Network debugging**.
-2. `windows/get-adb.bat`, then `find-projector.bat`. Copy `config.example.bat` to `config.bat` and fill it in.
+2. `windows/get-adb.bat`, then `find-projector.bat`, then `setup-config.bat` (asks for the address and optional keys, and writes `config.bat` for you).
+   - **Android 11+ / Google TV** (Mi Box S 2nd gen, Chromecast with Google TV, newer TVs) have *Wireless debugging* instead of *Network debugging*: run `pair-device.bat` first, it pairs with the code shown on the TV and saves the address.
 3. Live TV: follow `livetv-addon/README.md` (a 5-minute Cloudflare deploy). Add the link to Nuvio and to `config.bat`.
 4. Download `HorizonHome.apk` from **Releases → latest** into `windows/`, then run `install-horizon.bat`.
 5. Nuvio: `nuvio/addons.md` and `nuvio/README.md`.
@@ -86,3 +87,9 @@ GitHub Actions builds it on every change (Releases → latest). Locally: `launch
 - Font: Manrope (SIL Open Font License).
 
 Not affiliated with XGIMI, Google, Nuvio or any streaming service. The kit hosts no video; it only links to publicly available streams.
+
+## Troubleshooting
+
+- **`'Projector' is not recognized…` / `syntax is incorrect` / `Can't reach the projector at .`** — your `config.bat` lost its formatting (usually from editing it in a chat or a word processor). Delete it and run `setup-config.bat`.
+- **Mi Box S 2nd gen / Chromecast with Google TV / other Android 11+ devices** — turn on Developer options (Settings → System → About → click *Android TV OS build* 7 times), then Developer options → *Wireless debugging* → on, and run `pair-device.bat`. The port can change after a restart; just run it again.
+- **"Unauthorized"** — accept the *Allow debugging* prompt on the TV (tick *Always allow*).
