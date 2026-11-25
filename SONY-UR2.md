@@ -98,8 +98,10 @@ pick the stock launcher.
   `127.0.0.1:5555`. If Sony doesn't expose adbd on loopback, the panel shows a message;
   the rest of the home screen is unaffected.
 - **Home button:** takeover uses `cmd package set-home-activity` plus an accessibility
-  service. Android 10 supports both, but some Sony firmware may briefly show the stock
-  launcher before Horizon comes forward. The installer sets the default; a reboot can help.
+  service. Android 10 supports both, but Sony cleared `enabled_accessibility_services`
+  after a reboot on this UR2. Horizon remained the default Home and the Sony Home key
+  still opened it, so the accessibility helper is optional here. If you want it, enable
+  it through TV Settings → Accessibility.
 - **TV settings:** the gear uses `com.android.tv.settings` when present and falls back to
   Sony's standard Settings app.
 - **4K artwork:** 1920 px backdrops are a balance between sharpness and memory. If the

@@ -144,6 +144,12 @@ adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c 
 - [ ] Home button opens Horizon.
 - [ ] CleanYourTV is still installed (`pm path com.gathin.tvhome` succeeds).
 
+Note: on the UR2, Sony cleared `enabled_accessibility_services` after a reboot even
+though Horizon was still the default Home. The Home key still opened Horizon via the
+default-launcher route, so the accessibility helper is optional on this TV. If it is
+needed, enable it through TV Settings → Accessibility; do not rely on the ADB-written
+value surviving a boot.
+
 Do **not** disable or uninstall `com.gathin.tvhome` or
 `com.google.android.tvlauncher`.
 
@@ -190,6 +196,8 @@ Do **not** disable or uninstall `com.gathin.tvhome` or
 ## Phase 5 — verification
 
 - [ ] Home button after a reboot.
+      Reboot passed: Horizon remained Home; Sony cleared the accessibility helper, but
+      the Home key still opened Horizon through the default launcher.
 - [ ] HDMI input switching.
 - [ ] Wi-Fi/Ethernet pill.
 - [ ] TV settings shortcut.
