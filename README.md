@@ -1,8 +1,12 @@
 # Horizon Home Kit
 
+> **Sony X950G fork:** this build is tuned for a Sony Bravia X950G (Android TV 9, 3 GB RAM,
+> 4K panel). It adds device-aware labels, hides XGIMI-only settings, and loads sharper 4K
+> artwork. See **[SONY-X950G.md](SONY-X950G.md)** for the TV-specific install checklist.
+
 An ad-free home screen for Android TV / Google TV / projectors, built around **Nuvio**, with a full **Live TV guide**. It also includes my Nuvio setup, ad blocking and speed tweaks, and a runbook so **Claude sets it all up for you**.
 
-Built on an XGIMI Horizon S Max (Android TV 11, 1.7 GB RAM). It should work on any Android TV 8+ box or projector.
+Built on an XGIMI Horizon S Max (Android TV 11, 1.7 GB RAM). It should work on any Android TV 8+ box or projector; this fork is verified against the Sony Bravia X950G (Android TV 9, 3 GB RAM).
 
 ![Home](screenshots/01-home.png)
 
@@ -32,7 +36,7 @@ https://github.com/jyotiprakash101/horizon-home-kit/raw/main/screenshots/horizon
   - Favourites, and "Open in Nuvio".
   - Picks the sharpest version of each stream (up to 1080p).
 - **Top bar:** free memory, with per-app memory and a "free up" button. Also ads blocked today (NextDNS), clock and weather.
-- **Settings on the TV itself** (no PC needed): ad blocking, animation speed, Google TV recommendations, power button. Each change has an undo.
+- **Settings on the TV itself** (no PC needed): ad blocking, animation speed, Google TV recommendations, and the XGIMI power button (XGIMI only). Each change has an undo.
 - **Switch back to the Google TV home any time** from Horizon's settings on the TV (or `use-original-home.bat` from the PC), and back to Horizon again.
 - The remote's **Home button** always brings you to Horizon. The top bar has HDMI input and Wi-Fi shortcuts.
 
@@ -45,7 +49,7 @@ https://github.com/jyotiprakash101/horizon-home-kit/raw/main/screenshots/horizon
 
 **Nuvio setup** (`nuvio/`): my addon list in order (no keys), and my Home layout as a template (5 collections, 58 folders: Discover, Streaming Services with Netflix/Prime/Apple TV/Hulu…, Genres, Anime, Formats). This gives Nuvio's own home the same streaming-service tiles as the screenshots.
 
-**Windows scripts** (`windows/`): install, update, switch back, ad blocking on/off, speed tweaks, XGIMI power button. Every script backs up the original setting first and has an undo.
+**Windows scripts** (`windows/`): install, update, switch back, ad blocking on/off, speed tweaks, XGIMI power button. Every script backs up the original setting first and has an undo. Sony owners should skip `xgimi-power-*.bat`; see **[SONY-X950G.md](SONY-X950G.md)**.
 
 ## Set it up with Claude (easiest)
 

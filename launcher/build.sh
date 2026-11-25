@@ -11,7 +11,7 @@ BTV="${BUILD_TOOLS:-$(ls "$SDK/build-tools" | sort -V | tail -1)}"
 BT="$SDK/build-tools/$BTV"
 JAR="$SDK/platforms/android-30/android.jar"
 [ -f "$JAR" ] || JAR="$(ls -d "$SDK"/platforms/android-3*/android.jar | sort -V | tail -1)"
-VC="${VERSION_CODE:-17}"; VN="${VERSION_NAME:-3.3}"
+VC="${VERSION_CODE:-200}"; VN="${VERSION_NAME:-3.3-sony}"
 KS="${KEYSTORE:-kit.keystore}"; KP="${KEYSTORE_PASS:-horizonkit}"
 echo "SDK: $SDK  build-tools: $BTV  platform: $JAR"
 rm -rf build && mkdir -p build/res build/classes build/dex

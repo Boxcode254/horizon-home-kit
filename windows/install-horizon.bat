@@ -28,7 +28,7 @@ rem -- make Horizon the home screen; a tiny helper sends the remote's Home butto
 "%ADB%" -s %IP% shell cmd package set-home-activity %P%/.HomeActivity
 "%ADB%" -s %IP% shell settings put secure enabled_accessibility_services %P%/%P%.HomeButtonService
 "%ADB%" -s %IP% shell settings put secure accessibility_enabled 1
-rem -- hand over your settings (kept only on the projector) --
+rem -- hand over your settings (kept only on the TV) --
 set "X="
 if not "%NAME%"=="" set X=%X% --es name "%NAME%"
 if not "%TMDB_KEY%"=="" set X=%X% --es tmdb "%TMDB_KEY%"

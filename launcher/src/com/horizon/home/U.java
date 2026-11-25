@@ -3,6 +3,7 @@ package com.horizon.home;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -61,6 +62,22 @@ final class U {
         W = Math.max(dm.widthPixels, dm.heightPixels);
         H = Math.min(dm.widthPixels, dm.heightPixels);
         k = W / 1280f;
+    }
+
+    /** XGIMI projectors expose extra wall scenes, power behaviour and settings. */
+    static boolean isXgimi(Context c) {
+        String maker = android.os.Build.MANUFACTURER == null ? "" : android.os.Build.MANUFACTURER;
+        if (maker.toLowerCase(java.util.Locale.US).contains("xgimi")) return true;
+        PackageManager pm = c.getPackageManager();
+        for (String pkg : new String[]{"com.xgimi.xhplayer", "com.xgimi.atmosphere"}) {
+            try {
+                pm.getPackageInfo(pkg, 0);
+                return true;
+            } catch (Throwable ignored) {
+                // Not an XGIMI device.
+            }
+        }
+        return false;
     }
 
     static int s(float v) { return Math.round(v * k); }

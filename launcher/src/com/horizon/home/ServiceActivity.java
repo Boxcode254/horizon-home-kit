@@ -271,7 +271,7 @@ public class ServiceActivity extends Activity {
         desc.setText(it.desc == null ? "" : it.desc);
         info.setAlpha(0.35f);
         info.animate().alpha(1f).setDuration(260).setInterpolator(new DecelerateInterpolator()).withLayer().start();
-        Img.load(this, Img.sized(it.art(), "w1280"), HomeActivity.WALL_W, bm -> { if (shown == i && bm != null) showBack(bm); });
+        Img.load(this, Img.sized(it.art(), "original"), HomeActivity.WALL_W, bm -> { if (shown == i && bm != null) showBack(bm); });
     }
 
     private void showBack(android.graphics.Bitmap bm) {

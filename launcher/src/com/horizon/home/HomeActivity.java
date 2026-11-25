@@ -53,8 +53,11 @@ import java.util.Locale;
  */
 public class HomeActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static float EDGE = 64;
-    /** Backdrops sit under a dark shade and drift slowly: 1280 px wide looks the same and uses half the memory of 1920. */
-    static final int WALL_W = 1280;
+    /**
+     * Backdrops sit under a dark shade and drift slowly. 1920 px keeps 4K Bravia panels sharp while
+     * still using a fraction of the memory of a full 3840 px frame.
+     */
+    static final int WALL_W = 1920;
 
     private SharedPreferences prefs;
     private FrameLayout root, ui;
@@ -402,7 +405,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
         });
         memRow.setOnClickListener(v -> freeUpMemory());
 
-        // Right: privacy pill + HDMI, Wi-Fi, projector settings
+        // Right: privacy pill + HDMI, Wi-Fi, TV settings
         LinearLayout right = U.row(this);
         right.setClipChildren(false);
         LinearLayout priv = V.pill(this, 30, 12, 14);
@@ -424,7 +427,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
         View wifi = V.iconButton(this, wifiIcon, "Wi-Fi");
         wifi.setOnClickListener(v -> openSetting(Settings.ACTION_WIFI_SETTINGS));
         right.addView(wifi, lp(V.dp(30), V.dp(30), 9, 0, 0, 0));
-        right.addView(roundButton(Icon.GEAR, "Projector settings", v -> openProjectorSettings()), lp(V.dp(30), V.dp(30), 9, 0, 0, 0));
+        right.addView(roundButton(Icon.GEAR, U.isXgimi(this) ? "Projector settings" : "TV settings", v -> openTvSettings()), lp(V.dp(30), V.dp(30), 9, 0, 0, 0));
         bar.addView(right, U.flp(U.WRAP, U.WRAP, Gravity.END | Gravity.CENTER_VERTICAL));
     }
 
@@ -560,7 +563,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
             String msg;
             if ("waiting".equals(AdbLocal.state)) msg = "On screen now: \u201cAllow network debugging?\u201d \u2014 tick Always allow and choose Allow. Horizon only uses it to read memory and close background apps.";
             else if ("denied".equals(AdbLocal.state)) msg = "Permission was declined. Open this again to get the prompt back.";
-            else msg = "Network debugging is off on the projector, so per-app memory can't be read. Turn it on in Developer options to see it here.";
+            else msg = "Network debugging is off on this TV, so per-app memory can't be read. Turn it on in Developer options to see it here.";
             memPanel.addView(V.dim(V.text(this, msg, 10, 500, V.TEXT), 0.8f), lp(U.MATCH, U.WRAP, 0, 12, 0, 0));
         } else if (st != null) {
             memPanel.addView(V.dim(V.caps(this, "Using the most", 8, V.TEXT), 0.6f), lp(U.WRAP, U.WRAP, 0, 14, 0, 6));
@@ -624,7 +627,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
         }
         java.text.NumberFormat nf = java.text.NumberFormat.getIntegerInstance();
         panel.addView(V.text(this, nf.format(st.blocked) + " trackers stopped at the door.", 14, 800, V.TEXT), lp(U.WRAP, U.WRAP, 0, 12, 0, 0));
-        TextView body = V.dim(V.text(this, "Every lookup your projector makes is encrypted and filtered before it leaves the house. Ads and trackers never get an answer.", 9, 500, V.TEXT), 0.7f);
+        TextView body = V.dim(V.text(this, "Every lookup this TV makes is encrypted and filtered before it leaves the house. Ads and trackers never get an answer.", 9, 500, V.TEXT), 0.7f);
         body.setLineSpacing(V.dpf(2), 1f);
         panel.addView(body, lp(U.MATCH, U.WRAP, 0, 6, 0, 0));
 
@@ -1017,7 +1020,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
             remaining = Nuvio.duration(left) + " left · done by " + DateFormat.getTimeFormat(this).format(c.getTime());
         }
         String logo = it.logo;
-        setHero(it.key(), label, it.title, logo, line, it.progress(), remaining, Img.sized(it.art(), "w1280"));
+        setHero(it.key(), label, it.title, logo, line, it.progress(), remaining, Img.sized(it.art(), "original"));
         if (TextUtils.isEmpty(logo) && it.tmdbId > 0) {
             final Object k = heroKey;
             U.IO.execute(() -> {
@@ -1386,7 +1389,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
         if (!Apps.start(this, new Intent(action))) Apps.start(this, new Intent(Settings.ACTION_SETTINGS));
     }
 
-    private void openProjectorSettings() {
+    private void openTvSettings() {
         Intent i = new Intent(Intent.ACTION_MAIN);
         i.setComponent(new ComponentName("com.android.tv.settings", "com.android.tv.settings.MainSettings"));
         if (!Apps.start(this, i)) openSetting(Settings.ACTION_SETTINGS);

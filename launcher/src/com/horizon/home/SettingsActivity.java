@@ -79,7 +79,7 @@ public class SettingsActivity extends Activity {
 
         TextView h = V.text(this, "horizon", 26, 800, 0xFFFFFFFF);
         list.addView(h);
-        TextView sub = U.text(this, "Ad-free by design · no tracking · your XGIMI home", 13, 0x99FFFFFF, U.REG);
+        TextView sub = U.text(this, "Ad-free by design · no tracking · " + (U.isXgimi(this) ? "your XGIMI home" : "your TV home"), 13, 0x99FFFFFF, U.REG);
         list.addView(sub, U.llp(U.WRAP, U.WRAP, 0, 8, 0, 6));
 
         section("ARTWORK");
@@ -95,22 +95,24 @@ public class SettingsActivity extends Activity {
         toggle("Colours from artwork", "The accent glows in the colours of what's on screen", "art_colours", true);
         toggle("Weather", "Temperature next to the clock (Open-Meteo, no account)", "weather", true);
 
-        section("PROJECTOR CHANGES");
+        section(U.isXgimi(this) ? "PROJECTOR CHANGES" : "TV CHANGES");
         action("Ad & tracker blocking", () -> dnsOn() ? "On \u00b7 NextDNS" : "Off", () -> {
             final boolean on = dnsOn();
             confirmRun(on ? "Turn off ad & tracker blocking?" : "Turn ad & tracker blocking back on?",
-                    on ? "The projector goes back to its normal DNS. Ads and trackers will load again."
+                    on ? "The TV goes back to its normal DNS. Ads and trackers will load again."
                        : "Lookups are encrypted and filtered by your NextDNS profile again.",
                     on ? "settings delete global private_dns_mode; settings delete global private_dns_specifier"
                        : "settings put global private_dns_specifier " + NextDnsStats.profile(this) + ".dns.nextdns.io; settings put global private_dns_mode hostname");
         });
-        action("Power button", () -> fullOff() ? "Full shutdown \u00b7 logo on every start" : "Quick standby", () -> {
-            final boolean full = fullOff();
-            confirmRun(full ? "Switch Power Off to quick standby?" : "Make Power Off a full shutdown?",
-                    full ? "Turning on takes about 2 seconds. The XGIMI logo only plays after a full start (XGIMI does one on every 15th power-off)."
-                         : "Every Power Off uses XGIMI's own shutdown (cover closes). The XGIMI logo plays each time, but starting takes about 30\u201340 seconds.",
-                    full ? "settings delete system power_key_definition" : "settings put system power_key_definition 1");
-        });
+        if (U.isXgimi(this)) {
+            action("Power button", () -> fullOff() ? "Full shutdown \u00b7 logo on every start" : "Quick standby", () -> {
+                final boolean full = fullOff();
+                confirmRun(full ? "Switch Power Off to quick standby?" : "Make Power Off a full shutdown?",
+                        full ? "Turning on takes about 2 seconds. The XGIMI logo only plays after a full start (XGIMI does one on every 15th power-off)."
+                             : "Every Power Off uses XGIMI's own shutdown (cover closes). The XGIMI logo plays each time, but starting takes about 30\u201340 seconds.",
+                        full ? "settings delete system power_key_definition" : "settings put system power_key_definition 1");
+            });
+        }
         action("Animation speed", () -> fastAnim() ? "Fast (0.5\u00d7)" : "Normal", () -> {
             final boolean fast = fastAnim();
             confirmRun(fast ? "Back to normal animation speed?" : "Use fast animations?",
@@ -154,8 +156,8 @@ public class SettingsActivity extends Activity {
         toggle("Show greeting", null, U.P_GREET, true);
         action("Your name", () -> prefs.getString(U.P_NAME, ""), this::editName);
         action("Show hidden apps again", () -> hiddenCount() + " hidden", this::unhideAll);
-        action("Projector settings", () -> "Picture, keystone, 3D, sound", () -> Apps.start(this, new Intent(Settings.ACTION_SETTINGS)));
-        action("About", () -> "Version " + version() + "  ·  ad-free home for your XGIMI", null);
+        action(U.isXgimi(this) ? "Projector settings" : "TV settings", () -> "Picture, sound, inputs", () -> Apps.start(this, new Intent(Settings.ACTION_SETTINGS)));
+        action("About", () -> "Version " + version() + "  ·  ad-free home for " + (U.isXgimi(this) ? "your XGIMI" : "Android TV"), null);
     }
 
     private void installLiveTv() {
@@ -291,7 +293,7 @@ public class SettingsActivity extends Activity {
         return r != null && r.activityInfo != null && getPackageName().equals(r.activityInfo.packageName);
     }
 
-    /** Asks first, then runs the shell command on the projector itself (through its network-debugging port). */
+    /** Asks first, then runs the shell command on the TV itself (through its network-debugging port). */
     private void confirmRun(String title, String message, final String cmd) {
         new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
                 .setTitle(title)
@@ -304,7 +306,7 @@ public class SettingsActivity extends Activity {
                             if (out == null) {
                                 Toast.makeText(this, "waiting".equals(AdbLocal.state)
                                         ? "Allow the network debugging prompt on screen, then try again"
-                                        : "Couldn't reach the projector's debugging port. Turn on network debugging in Developer options.",
+                                        : "Couldn't reach the TV's debugging port. Turn on network debugging in Developer options.",
                                         Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
@@ -416,7 +418,7 @@ public class SettingsActivity extends Activity {
         for (final Scene s : Scene.scan(this)) {
             i++;
             final boolean has = s.video != null;
-            final LinearLayout row = rowBase(s.name, has ? null : "Not copied to the projector yet");
+            final LinearLayout row = rowBase(s.name, has ? null : "Not copied to this TV yet");
             ImageView thumb = new ImageView(this);
             thumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Ui.rounded(thumb, 6);
