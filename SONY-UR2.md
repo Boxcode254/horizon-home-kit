@@ -4,9 +4,8 @@ This fork is tuned for a **Sony BRAVIA 4K UR2** (`BRAVIA_UR2_4K`, MediaTek mt589
 Android TV 10, 2.3 GB RAM, 4K panel). The same build works on other Android TV 8+
 devices.
 
-This is the TV currently running the CleanYourTV launcher. The migration from
-CleanYourTV to Horizon Home is documented in
-**[MIGRATION-PLAN.md](MIGRATION-PLAN.md)**.
+This is the TV now running **Horizon Home**, with CleanYourTV kept installed as the
+fallback. The migration is documented in **[MIGRATION-PLAN.md](MIGRATION-PLAN.md)**.
 
 ## What this fork changes
 
@@ -104,9 +103,12 @@ pick the stock launcher.
   it through TV Settings → Accessibility.
 - **TV settings:** the gear uses `com.android.tv.settings` when present and falls back to
   Sony's standard Settings app.
-- **4K artwork:** 1920 px backdrops are a balance between sharpness and memory. If the
-  launcher feels heavy on 2.3 GB, change `WALL_W` in `HomeActivity.java` back to `1280`
-  and use `w1280` in `HomeActivity`/`ServiceActivity`.
+- **4K artwork:** 1280 px backdrops match the UR2's 1080p UI surface and avoid memory
+  churn on 2.3 GB RAM. If you prefer sharper art, change `WALL_W` in `HomeActivity.java`
+  to `1920` and use `"original"`/`w1920` consistently — but test the image cache first.
+- **Image flicker:** on this UR2, poster/app-icon images can occasionally flicker and
+  re-fade while art loads. The 1280 px change and the row-reload guards reduce it, but it
+  is not fully resolved; left as a known cosmetic issue for now.
 - **Public signing key:** `launcher/kit.keystore` is public so builds can update each other.
   Only install the APK from this fork's Releases (or build it yourself) — anyone with the
   repo can sign an APK with the same key.

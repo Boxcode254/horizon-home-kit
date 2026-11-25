@@ -1,6 +1,7 @@
 # Migration plan: CleanYourTV → Horizon Home
 
-> Status: planning. Nothing on the TV has been changed yet.
+> Status: **in progress on the UR2** — A, B and D are live; C and F are pending;
+> the image-flicker issue is deferred. Backup and rollback rehearsal are complete.
 > Scope chosen by the owner: **A + B + C + D + F**.
 > Excluded: E (NextDNS), G (speed tweaks), all XGIMI-only features.
 
@@ -20,13 +21,29 @@
 The APK still contains the excluded code paths, but the install will leave them
 unconfigured. The NextDNS pill is hidden unless a profile ID and API key exist.
 
-## Current state
+## Live status (2026-11-25)
+
+| Item | State |
+|---|---|
+| Home | `com.horizon.home/.HomeActivity` — verified after reboot |
+| CleanYourTV | still installed and enabled as the fallback |
+| Stock launcher | still disabled |
+| A — core home | live: apps, clock/weather, HDMI, Wi-Fi, settings |
+| B — Nuvio | live: `com.nuvio.app`; Continue Watching and streaming tiles |
+| C — Live TV | pending: needs the Cloudflare Worker |
+| D — memory panel | live: per-app memory via the app's local ADB key |
+| F — Nuvio layout | pending: export current layout before any Push |
+| E / G / XGIMI | not configured |
+| Backup | local only; rollback rehearsal passed |
+| Known issue | image/poster/app-icon flicker on the UR2; 1280 px art and row-reload guards reduce it, not fully resolved; deferred |
+
+## Before migration
 
 From `Boxcode254/cleanyourtv` (commit `4bb9b0d`):
 
 | | |
 |---|---|
-| TV | Sony BRAVIA 4K UR2 (`BRAVIA_UR2_4K`, MediaTek mt5893) — **confirm before executing** |
+| TV | Sony BRAVIA 4K UR2 (`BRAVIA_UR2_4K`, MediaTek mt5893) — confirmed |
 | OS | Android TV 10 (API 29) |
 | RAM | 2.3 GB |
 | Home | `com.gathin.tvhome/.MainActivity` |
@@ -47,7 +64,7 @@ anything.
 | Home | `com.horizon.home/.HomeActivity` |
 | CleanYourTV | still installed, package enabled, **not Home** |
 | Stock Google launcher | still disabled |
-| CleanYourTV accessibility helpers | disabled while Horizon owns Home; restored on rollback |
+| CleanYourTV accessibility helpers | disabled (Sony cleared the ADB-set helper after reboot; the Home key still works via the default launcher) |
 | Backups | local only, outside git |
 
 ## Phase 0 — confirm

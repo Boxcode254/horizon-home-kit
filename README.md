@@ -6,6 +6,7 @@
 >
 > **Migration runbook:** replacing CleanYourTV on the UR2? See
 > **[MIGRATION-PLAN.md](MIGRATION-PLAN.md)** for the backup, switch, feature and rollback plan.
+> A, B and D are live; C and F are pending.
 
 An ad-free home screen for Android TV / Google TV / projectors, built around **Nuvio**, with a full **Live TV guide**. It also includes my Nuvio setup, ad blocking and speed tweaks, and a runbook so **Claude sets it all up for you**.
 
