@@ -3,6 +3,9 @@
 > **Sony X950G fork:** this build is tuned for a Sony Bravia X950G (Android TV 9, 3 GB RAM,
 > 4K panel). It adds device-aware labels, hides XGIMI-only settings, and loads sharper 4K
 > artwork. See **[SONY-X950G.md](SONY-X950G.md)** for the TV-specific install checklist.
+>
+> **Migration runbook:** replacing CleanYourTV on a Sony Bravia? See
+> **[MIGRATION-PLAN.md](MIGRATION-PLAN.md)** for the backup, switch, feature and rollback plan.
 
 An ad-free home screen for Android TV / Google TV / projectors, built around **Nuvio**, with a full **Live TV guide**. It also includes my Nuvio setup, ad blocking and speed tweaks, and a runbook so **Claude sets it all up for you**.
 

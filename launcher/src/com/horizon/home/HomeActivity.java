@@ -405,23 +405,25 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
         });
         memRow.setOnClickListener(v -> freeUpMemory());
 
-        // Right: privacy pill + HDMI, Wi-Fi, TV settings
+        // Right: privacy pill (only when NextDNS is configured) + HDMI, Wi-Fi, TV settings
         LinearLayout right = U.row(this);
         right.setClipChildren(false);
-        LinearLayout priv = V.pill(this, 30, 12, 14);
-        privacyIcon = new Icon(this, Icon.SHIELD);
-        priv.addView(privacyIcon, new LinearLayout.LayoutParams(V.dp(13), V.dp(13)));
-        privacyText = V.text(this, "", 10, 500, V.TEXT);
-        priv.addView(privacyText, lp(U.WRAP, U.WRAP, 8, 0, 0, 0));
-        priv.setOnClickListener(v -> Toast.makeText(this, privacyMessage(), Toast.LENGTH_LONG).show());
-        priv.setOnFocusChangeListener((v, has) -> {
-            V.stylePill(priv, has, 15, null);
-            U.MAIN.removeCallbacks(openPanel);
-            if (has) U.MAIN.postDelayed(openPanel, 200); else hidePanel();
-        });
-        V.tint(priv, V.TEXT);
         right.addView(memRow, lp(U.WRAP, V.dp(30), 0, 0, 9, 0));
-        right.addView(priv);
+        if (NextDnsStats.configured(this)) {
+            LinearLayout priv = V.pill(this, 30, 12, 14);
+            privacyIcon = new Icon(this, Icon.SHIELD);
+            priv.addView(privacyIcon, new LinearLayout.LayoutParams(V.dp(13), V.dp(13)));
+            privacyText = V.text(this, "", 10, 500, V.TEXT);
+            priv.addView(privacyText, lp(U.WRAP, U.WRAP, 8, 0, 0, 0));
+            priv.setOnClickListener(v -> Toast.makeText(this, privacyMessage(), Toast.LENGTH_LONG).show());
+            priv.setOnFocusChangeListener((v, has) -> {
+                V.stylePill(priv, has, 15, null);
+                U.MAIN.removeCallbacks(openPanel);
+                if (has) U.MAIN.postDelayed(openPanel, 200); else hidePanel();
+            });
+            V.tint(priv, V.TEXT);
+            right.addView(priv);
+        }
         right.addView(roundButton(Icon.HDMI, "HDMI", v -> openHdmi()), lp(V.dp(30), V.dp(30), 9, 0, 0, 0));
         wifiIcon = new Icon(this, Icon.WIFI);
         View wifi = V.iconButton(this, wifiIcon, "Wi-Fi");
@@ -1318,6 +1320,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
     }
 
     private void updatePrivacy() {
+        if (privacyIcon == null || privacyText == null) return;
         boolean on = nextDnsOn();
         privacyIcon.setType(on ? Icon.SHIELD : Icon.SHIELD_OFF);
         NextDnsStats.Stats st = NextDnsStats.cached();

@@ -96,14 +96,16 @@ public class SettingsActivity extends Activity {
         toggle("Weather", "Temperature next to the clock (Open-Meteo, no account)", "weather", true);
 
         section(U.isXgimi(this) ? "PROJECTOR CHANGES" : "TV CHANGES");
-        action("Ad & tracker blocking", () -> dnsOn() ? "On \u00b7 NextDNS" : "Off", () -> {
-            final boolean on = dnsOn();
-            confirmRun(on ? "Turn off ad & tracker blocking?" : "Turn ad & tracker blocking back on?",
-                    on ? "The TV goes back to its normal DNS. Ads and trackers will load again."
-                       : "Lookups are encrypted and filtered by your NextDNS profile again.",
-                    on ? "settings delete global private_dns_mode; settings delete global private_dns_specifier"
-                       : "settings put global private_dns_specifier " + NextDnsStats.profile(this) + ".dns.nextdns.io; settings put global private_dns_mode hostname");
-        });
+        if (NextDnsStats.configured(this)) {
+            action("Ad & tracker blocking", () -> dnsOn() ? "On \u00b7 NextDNS" : "Off", () -> {
+                final boolean on = dnsOn();
+                confirmRun(on ? "Turn off ad & tracker blocking?" : "Turn ad & tracker blocking back on?",
+                        on ? "The TV goes back to its normal DNS. Ads and trackers will load again."
+                           : "Lookups are encrypted and filtered by your NextDNS profile again.",
+                        on ? "settings delete global private_dns_mode; settings delete global private_dns_specifier"
+                           : "settings put global private_dns_specifier " + NextDnsStats.profile(this) + ".dns.nextdns.io; settings put global private_dns_mode hostname");
+            });
+        }
         if (U.isXgimi(this)) {
             action("Power button", () -> fullOff() ? "Full shutdown \u00b7 logo on every start" : "Quick standby", () -> {
                 final boolean full = fullOff();
