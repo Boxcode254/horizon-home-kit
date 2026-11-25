@@ -22,6 +22,11 @@ jobs:
       - name: Publish as the "latest" release
         env: { GH_TOKEN: "${{ github.token }}" }
         run: |
-          gh release delete latest -y --cleanup-tag 2>/dev/null || true
-          gh release create latest launcher/build/HorizonHome.apk -t "Horizon Home (Sony X950G build)" \
-            -n "Built automatically from commit ${GITHUB_SHA::7}. Install with windows/install-horizon.bat. See SONY-X950G.md."
+          TITLE="Horizon Home (Sony Bravia UR2 build)"
+          NOTES="Built automatically from commit ${GITHUB_SHA::7}. Install with windows/install-horizon.bat. See SONY-UR2.md and MIGRATION-PLAN.md."
+          if gh release view latest >/dev/null 2>&1; then
+            gh release upload latest launcher/build/HorizonHome.apk --clobber
+            gh release edit latest -t "$TITLE" -n "$NOTES"
+          else
+            gh release create latest launcher/build/HorizonHome.apk -t "$TITLE" -n "$NOTES"
+          fi

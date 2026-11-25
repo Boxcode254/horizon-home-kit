@@ -1,15 +1,15 @@
 # Horizon Home Kit
 
-> **Sony X950G fork:** this build is tuned for a Sony Bravia X950G (Android TV 9, 3 GB RAM,
-> 4K panel). It adds device-aware labels, hides XGIMI-only settings, and loads sharper 4K
-> artwork. See **[SONY-X950G.md](SONY-X950G.md)** for the TV-specific install checklist.
+> **Sony Bravia UR2 fork:** this build is tuned for a Sony BRAVIA 4K UR2 (Android TV 10,
+> 2.3 GB RAM, 4K panel). It adds device-aware labels, hides XGIMI-only settings, and loads
+> sharper 4K artwork. See **[SONY-UR2.md](SONY-UR2.md)** for the TV-specific checklist.
 >
-> **Migration runbook:** replacing CleanYourTV on a Sony Bravia? See
+> **Migration runbook:** replacing CleanYourTV on the UR2? See
 > **[MIGRATION-PLAN.md](MIGRATION-PLAN.md)** for the backup, switch, feature and rollback plan.
 
 An ad-free home screen for Android TV / Google TV / projectors, built around **Nuvio**, with a full **Live TV guide**. It also includes my Nuvio setup, ad blocking and speed tweaks, and a runbook so **Claude sets it all up for you**.
 
-Built on an XGIMI Horizon S Max (Android TV 11, 1.7 GB RAM). It should work on any Android TV 8+ box or projector; this fork is verified against the Sony Bravia X950G (Android TV 9, 3 GB RAM).
+Built on an XGIMI Horizon S Max (Android TV 11, 1.7 GB RAM). It should work on any Android TV 8+ box or projector; this fork is verified against the Sony BRAVIA 4K UR2 (Android TV 10, 2.3 GB).
 
 ![Home](screenshots/01-home.png)
 
