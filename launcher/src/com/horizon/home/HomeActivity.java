@@ -54,10 +54,10 @@ import java.util.Locale;
 public class HomeActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static float EDGE = 64;
     /**
-     * Backdrops sit under a dark shade and drift slowly. 1920 px keeps 4K Bravia panels sharp while
-     * still using a fraction of the memory of a full 3840 px frame.
+     * Backdrops sit under a dark shade and drift slowly. 1280 px matches the UR2's 1080p UI
+     * surface and avoids memory churn on a 2.3 GB set.
      */
-    static final int WALL_W = 1920;
+    static final int WALL_W = 1280;
 
     private SharedPreferences prefs;
     private FrameLayout root, ui;
@@ -97,6 +97,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
     private List<Apps.App> apps = new ArrayList<>();
     private Nuvio.Result nuvio;
     private long nuvioAt;
+    private String nuvioSig, appsSig;
     private final List<Nuvio.Item> cwItems = new ArrayList<>();
 
     // state
@@ -1022,7 +1023,7 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
             remaining = Nuvio.duration(left) + " left · done by " + DateFormat.getTimeFormat(this).format(c.getTime());
         }
         String logo = it.logo;
-        setHero(it.key(), label, it.title, logo, line, it.progress(), remaining, Img.sized(it.art(), "original"));
+        setHero(it.key(), label, it.title, logo, line, it.progress(), remaining, Img.sized(it.art(), "w1280"));
         if (TextUtils.isEmpty(logo) && it.tmdbId > 0) {
             final Object k = heroKey;
             U.IO.execute(() -> {
@@ -1213,8 +1214,21 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
     private void loadApps() {
         U.IO.execute(() -> {
             final List<Apps.App> list = Apps.load(getApplicationContext());
-            U.MAIN.post(() -> { apps = list; fillRows(); });
+            final String sig = appSignature(list);
+            U.MAIN.post(() -> {
+                apps = list;
+                boolean empty = appsRow == null || appsRow.getChildCount() == 0;
+                if (sig.equals(appsSig) && !empty) return;
+                appsSig = sig;
+                fillRows();
+            });
         });
+    }
+
+    private static String appSignature(List<Apps.App> list) {
+        StringBuilder b = new StringBuilder();
+        for (Apps.App a : list) b.append(a.pkg).append('\u0001').append(a.label).append('\u0002');
+        return b.toString();
     }
 
     private void loadNuvio() {
@@ -1222,8 +1236,12 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
         final boolean fill = prefs.getBoolean(U.P_HERO_FILL, true);
         U.IO.execute(() -> {
             final Nuvio.Result r = Nuvio.load(getApplicationContext(), fill);
+            final String sig = nuvioSignature(r);
             U.MAIN.post(() -> {
                 nuvio = r;
+                boolean empty = cwRow == null || cwRow.getChildCount() == 0;
+                if (sig.equals(nuvioSig) && !empty) return;
+                nuvioSig = sig;
                 View f = getCurrentFocus();
                 boolean onCw = f != null && f.getParent() == cwRow;
                 fillContinue();
@@ -1232,6 +1250,13 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
                 if (onCw || getCurrentFocus() == null) focusDefault();
             });
         });
+    }
+
+    private static String nuvioSignature(Nuvio.Result r) {
+        if (r == null) return "";
+        StringBuilder b = new StringBuilder();
+        for (Nuvio.Item it : r.continueWatching) b.append(it.key()).append('\u0001');
+        return b.append('|').append(r.error).toString();
     }
 
     private void loadWeather() {
@@ -1276,7 +1301,6 @@ public class HomeActivity extends Activity implements SharedPreferences.OnShared
             coldStart = false;
         }
         if (wall != null) wall.resume();
-        loadNuvio();
     }
 
     // ================================================================== ambient

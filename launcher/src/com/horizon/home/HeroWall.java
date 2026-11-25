@@ -17,6 +17,7 @@ final class HeroWall extends FrameLayout implements Glass.Source {
     private final ObjectAnimator[] drift = new ObjectAnimator[2];
     private int front = -1;
     private int flip;
+    private Bitmap current;
     private final View fallback;
     private long driftMs = 14000;
 
@@ -43,7 +44,8 @@ final class HeroWall extends FrameLayout implements Glass.Source {
     boolean hasImage() { return front >= 0; }
 
     void show(Bitmap b) {
-        if (b == null) return;
+        if (b == null || b == current) return;
+        current = b;
         int next = front < 0 ? 0 : 1 - front;
         final ImageView n = iv[next];
         n.animate().cancel();
